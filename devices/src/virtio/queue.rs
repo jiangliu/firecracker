@@ -306,6 +306,15 @@ impl Queue {
                 used_ring_size
             );
             false
+        } else if desc_table.offset() & 0xf != 0 {
+            error!("virtio queue descriptor table breaks alignment contraints");
+            false
+        } else if avail_ring.offset() & 0x1 != 0 {
+            error!("virtio queue available ring breaks alignment contraints");
+            false
+        } else if used_ring.offset() & 0x3 != 0 {
+            error!("virtio queue used ring breaks alignment contraints");
+            false
         } else {
             true
         }
